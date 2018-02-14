@@ -1,14 +1,14 @@
 "use strict";
 
-function merge(A, B) {
+function merge(A, B, f) {
   if (!Array.isArray(A) || !Array.isArray(B)) {
-    throw new Error("merge expects both of its arguments to be arrays");
+    throw new Error("merge expects its first 2 arguments to be arrays");
   }
 
   let result = [];
   let [i, j] = [0, 0];
-  while (i < A.length && j < B.length) {
-    if (A[i] <= B[j]) {
+  while (A[i] && B[j]) {
+    if (f(A[i], B[j]) <= 0) {
       result.push(A[i]);
       i++;
     } else {
@@ -30,16 +30,16 @@ function merge(A, B) {
   return result;
 }
 
-function mergeSort(A) {
+function mergeSort(A, f = (x, y) => x - y) {
   if (!Array.isArray(A)) {
-    throw new Error("mergeSort expects its argument to be an array");
+    throw new Error("mergeSort expects its first argument to be an array");
   }
 
   if (A.length <= 1) return A;
   let i = Math.floor(A.length / 2);
   let L = A.slice(0, i);
   let R = A.slice(i);
-  return merge(mergeSort(L), mergeSort(R));
+  return merge(mergeSort(L), mergeSort(R), f);
 }
 
 module.exports = {
